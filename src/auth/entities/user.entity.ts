@@ -1,37 +1,56 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { validRoles } from '../interfaces';
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  id: string;
+
+  @Column('text')
+  name: string;
+
+  @Column('text')
+  lastName: string;
+
+  @Column('text', { nullable: true })
+  middleName: string;
+
+  @Column('text', { nullable: true })
+  secondLastName: string;
 
   @Column('text', { unique: true })
-  email: string
-
-  @Column('text', { select: false })
-  password: string
-
-  @Column('text')
-  name: string
-
-  @Column('text')
-  lastName: string
+  email: string;
 
   @Column('bool', { default: true })
-  isActive: boolean
+  isActive: boolean;
 
-  @Column('text', { array: true, default: ['user'] })
-  roles: string[]
+  @Column('text', { array: true, default: [validRoles.alumn] })
+  roles: string[];
+
+  @Column('text', { nullable: true })
+  photoURL: string;
 
   @Column('date', { default: new Date() })
-  createdAt: string
+  createdAt: string;
 
   @Column('date', { nullable: true })
-  updatedAt: string
+  updatedAt: string;
+
+  @Column('text', { select: false })
+  password: string;
+
+  @Column('int', { nullable: true })
+  rut: number;
 
   @BeforeInsert()
   @BeforeUpdate()
   checkFieldsBeforeInsert() {
-    this.email = this.email.toLowerCase().trim()
+    this.email = this.email.toLowerCase().trim();
   }
 }

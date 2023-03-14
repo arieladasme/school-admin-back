@@ -1,4 +1,5 @@
 export enum validRoles {
   adim = 'admin',
-  user = 'user',
+  alumn = 'user',
+  teacher = 'teacher',
 }
