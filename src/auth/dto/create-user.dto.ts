@@ -1,43 +1,34 @@
-import {
-  IsEmail,
-  IsNumber,
-  IsString,
-  Matches,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsNumber, IsString, Matches, MaxLength, MinLength } from 'class-validator'
 
 export class CreateUserDto {
   @IsString()
   @IsEmail()
-  email: string;
+  email: string
 
   @IsString()
   @MinLength(6)
   @MaxLength(50)
   @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message:
-      'The password must have a Uppercase, lowercase letter and a number',
+    message: 'The password must have a Uppercase, lowercase letter and a number',
   })
-  password: string;
+  password: string
 
   @IsString()
   @MinLength(1)
-  name: string;
+  name: string
 
   @IsString()
   @MinLength(1)
-  lastName: string;
+  lastName: string
 
   @IsString()
   @MinLength(1)
-  middleName: string;
+  middleName: string
 
   @IsString()
   @MinLength(1)
-  secondLastName: string;
+  secondLastName: string
 
   @IsNumber()
-  @MinLength(1)
-  rut: number;
+  rut: number
 }
