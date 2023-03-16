@@ -9,7 +9,6 @@ import { JwtService } from '@nestjs/jwt'
 import { Repository } from 'typeorm'
 import * as bcrypt from 'bcrypt'
 import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/user.entity'
 import { LoginUserDto } from './dto'
 import { JwtPayload } from './interfaces'
@@ -54,17 +53,23 @@ export class AuthService {
     return { ...user, token: this.getJwtToken({ id: user.id }) }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} auth`
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`
+  async refreshToken(token: string) {
+    try {
+      const { sub, roles } = await this.jwtService.verify(token)
+      const payload = { sub, roles }
+      return this.jwtService.sign(payload)
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
   }
 
   private getJwtToken(payload: JwtPayload) {
     const token = this.jwtService.sign(payload)
     return token
+  }
+
+  async checkAuthStatus(user: User) {
+    return { ...user, token: this.getJwtToken({ id: user.id }) }
   }
 
   private handleDBErrors(error: any): never {
