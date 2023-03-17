@@ -3,8 +3,9 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  HttpException,
+  HttpStatus,
   Injectable,
-  InternalServerErrorException,
 } from '@nestjs/common'
 import { Observable } from 'rxjs'
 import { User } from 'src/auth/entities/user.entity'
@@ -23,7 +24,12 @@ export class UserRoleGuard implements CanActivate {
     const req = context.switchToHttp().getRequest()
     const user = req.user as User
 
-    if (!user) throw new InternalServerErrorException('User not found')
+    // TODO:  DEPRECATED!
+    if (!user)
+      throw new HttpException(
+        { status: HttpStatus.NOT_FOUND, error: 'User not found' },
+        HttpStatus.NOT_FOUND,
+      )
 
     for (const role of user.roles) {
       if (validRoles.includes(role)) return true

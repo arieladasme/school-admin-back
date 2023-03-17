@@ -22,7 +22,7 @@ export class AuthController {
 
   @Get('refresh-token')
   async refreshToken(@Req() request: any) {
-    return this.authService.refreshToken(request.headers.auth)
+    return this.authService.refreshToken(request.headers.authtoken)
   }
 
   @Get('check-status')

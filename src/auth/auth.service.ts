@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -59,7 +61,13 @@ export class AuthService {
       const payload = { sub, roles }
       return this.jwtService.sign(payload)
     } catch (error) {
-      throw new BadRequestException(error)
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: error,
+        },
+        HttpStatus.FORBIDDEN,
+      )
     }
   }
 
@@ -72,11 +80,16 @@ export class AuthService {
     return { ...user, token: this.getJwtToken({ id: user.id }) }
   }
 
-  private handleDBErrors(error: any): never {
-    if (error.code === '23505') throw new BadRequestException(error.detail)
+  private handleDBErrors(error: any) {
+    if (error.code === '23505')
+      throw new HttpException(
+        { status: HttpStatus.BAD_REQUEST, error: error.detail },
+        HttpStatus.BAD_REQUEST,
+      )
 
-    console.log(error)
-
-    throw new InternalServerErrorException('Please check server logs')
+    throw new HttpException(
+      { status: HttpStatus.INTERNAL_SERVER_ERROR, error: 'Please check server logs' },
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    )
   }
 }
