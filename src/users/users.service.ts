@@ -13,16 +13,17 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create({ password, ...userData }: CreateUserDto) {
     try {
-      const { password, ...userData } = createUserDto
+      const hashedPassword = await bcrypt.hash(password, 10)
 
-      const user = this.userRepository.create({
-        ...userData,
-        password: bcrypt.hashSync(password, 10),
-      })
+      const user = await this.userRepository.save(
+        this.userRepository.create({
+          ...userData,
+          password: hashedPassword,
+        }),
+      )
 
-      await this.userRepository.save(user)
       delete user.password
 
       return user
@@ -48,15 +49,12 @@ export class UsersService {
   }
 
   private handleDBErrors(error: any) {
-    if (error.code === '23505')
-      throw new HttpException(
-        { status: HttpStatus.BAD_REQUEST, error: error.detail },
-        HttpStatus.BAD_REQUEST,
-      )
-
     throw new HttpException(
-      { status: HttpStatus.INTERNAL_SERVER_ERROR, error: 'Please check server logs' },
-      HttpStatus.INTERNAL_SERVER_ERROR,
+      {
+        status: HttpStatus.BAD_REQUEST,
+        error: error.code === '23505' ? error.detail : 'Please check server logs',
+      },
+      HttpStatus.BAD_REQUEST,
     )
   }
 }
