@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { AuthService } from './auth.service'
 import { Auth, GetUser } from './decorators'
 import { LoginUserDto } from './dto'
-import { CreateUserDto } from './dto/create-user.dto'
+import { RegisterUserDto } from './dto/register-user.dto'
 import { User } from './entities/user.entity'
 
 @Controller('auth')
@@ -11,8 +11,8 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  createUser(@Body() createUserDto: CreateUserDto) {
-    return this.authService.create(createUserDto)
+  createUser(@Body() registerUserDto: RegisterUserDto) {
+    return this.authService.create(registerUserDto)
   }
 
   @Post('login')
@@ -22,6 +22,7 @@ export class AuthController {
 
   @Get('refresh-token')
   async refreshToken(@Req() request: any) {
+    console.log('refresh-token')
     return this.authService.refreshToken(request.headers.authtoken)
   }
 

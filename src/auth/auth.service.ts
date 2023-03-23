@@ -1,16 +1,9 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { JwtService } from '@nestjs/jwt'
 import { Repository } from 'typeorm'
 import * as bcrypt from 'bcrypt'
-import { CreateUserDto } from './dto/create-user.dto'
+import { RegisterUserDto } from './dto/register-user.dto'
 import { User } from './entities/user.entity'
 import { LoginUserDto } from './dto'
 import { JwtPayload } from './interfaces'
@@ -23,9 +16,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(registerUserDto: RegisterUserDto) {
     try {
-      const { password, ...userData } = createUserDto
+      const { password, ...userData } = registerUserDto
 
       const user = this.userRepository.create({
         ...userData,
@@ -58,7 +51,9 @@ export class AuthService {
   async refreshToken(token: string) {
     try {
       const { sub, roles } = await this.jwtService.verify(token)
+
       const payload = { sub, roles }
+      console.log(this.jwtService.sign(payload))
       return this.jwtService.sign(payload)
     } catch (error) {
       throw new HttpException(

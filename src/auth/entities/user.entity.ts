@@ -24,7 +24,7 @@ export class User {
   @Column('bool', { default: true })
   isActive: boolean
 
-  @Column('text', { array: true, default: [validRoles.alumn] })
+  @Column('text', { array: true, default: [validRoles.student] })
   roles: string[]
 
   @Column('text', { nullable: true })
