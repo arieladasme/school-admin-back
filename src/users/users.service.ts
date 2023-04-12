@@ -51,6 +51,7 @@ export class UsersService {
       skip: offset,
       //relations: { xxx: true },
     })
+    console.log('users')
     return users
   }
 

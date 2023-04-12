@@ -22,7 +22,6 @@ export class AuthController {
 
   @Get('refresh-token')
   async refreshToken(@Req() request: any) {
-    console.log('refresh-token')
     return this.authService.refreshToken(request.headers.authtoken)
   }
 

@@ -53,7 +53,6 @@ export class AuthService {
       const { sub, roles } = await this.jwtService.verify(token)
 
       const payload = { sub, roles }
-      console.log(this.jwtService.sign(payload))
       return this.jwtService.sign(payload)
     } catch (error) {
       throw new HttpException(
