@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import * as bcrypt from 'bcrypt'
+import { PaginationDto } from '../common/dtos/pagination.dto'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from '../auth/entities/user.entity'
@@ -32,8 +33,25 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return `This action returns all users`
+  async findAll(paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDto
+    const users = await this.userRepository.find({
+      select: [
+        'id',
+        'name',
+        'middleName',
+        'lastName',
+        'secondLastName',
+        'rut',
+        'email',
+        'isActive',
+        'roles',
+      ],
+      take: limit,
+      skip: offset,
+      //relations: { xxx: true },
+    })
+    return users
   }
 
   findOne(id: number) {

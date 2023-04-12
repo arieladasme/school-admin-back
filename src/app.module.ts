@@ -4,12 +4,13 @@ import { ConfigModule } from '@nestjs/config'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
-import { SeedModule } from './seed/seed.module';
-import { UsersModule } from './users/users.module';
-import { SubjectsModule } from './subjects/subjects.module';
-import { CoursesModule } from './courses/courses.module';
-import { ScoresModule } from './scores/scores.module';
-import { CourseStudentModule } from './course-student/course-student.module';
+import { SeedModule } from './seed/seed.module'
+import { UsersModule } from './users/users.module'
+import { SubjectsModule } from './subjects/subjects.module'
+import { CoursesModule } from './courses/courses.module'
+import { ScoresModule } from './scores/scores.module'
+import { CourseStudentModule } from './course-student/course-student.module'
+import { CommonModule } from './common/common.module'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CourseStudentModule } from './course-student/course-student.module';
     CoursesModule,
     ScoresModule,
     CourseStudentModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [AppService],
