@@ -31,7 +31,7 @@ export class UserRoleGuard implements CanActivate {
         HttpStatus.NOT_FOUND,
       )
 
-    for (const role of user.roles) {
+    for (const role of user.role) {
       if (validRoles.includes(role)) return true
     }
 

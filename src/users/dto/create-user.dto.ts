@@ -28,7 +28,7 @@ export class CreateUserDto {
   secondLastName: string
 
   @IsEnum(validRoles, { each: true })
-  roles: validRoles[]
+  role: validRoles
 
   //@Matches(/^\d{7,8}-[\dkK]$/, { message: 'The number must be an integer' })
   @IsInt({ message: 'The number must be an integer' })

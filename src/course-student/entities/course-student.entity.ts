@@ -13,6 +13,6 @@ export class CourseStudent {
   /* @ManyToOne(type => Course, course => course)
   course: Course; */
 
-  @ManyToOne((type) => User, (user) => user.roles['students'])
+  @ManyToOne((type) => User, (user) => user.role)
   student: User
 }
