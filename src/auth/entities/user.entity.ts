@@ -36,7 +36,7 @@ export class User {
   @Column('date', { nullable: true })
   updatedAt: string
 
-  @Column('text') // ,{ select: false }
+  @Column('text', { nullable: true })
   password: string
 
   @Column('int', { nullable: true, unique: true })

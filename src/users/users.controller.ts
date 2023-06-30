@@ -12,8 +12,6 @@ export class UsersController {
   // Ruta para crear un nuevo usuario
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    console.log('create')
-    console.log(createUserDto)
     return this.usersService.create(createUserDto)
   }
 

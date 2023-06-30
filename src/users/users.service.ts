@@ -15,33 +15,38 @@ export class UsersService {
   ) {}
 
   /**
-   * Creates a new user with the provided data
-   * @param {CreateUserDto} createUserDto - Data for creating a user
-   * @returns {Promise<User>} - The created user
+   * Crea un nuevo usuario en la base de datos
+   * @param createUserDto - Datos necesarios para crear al usuario
+   * @returns El usuario creado
    */
-  async create({ password, ...userData }: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const { rut } = createUserDto
+
     try {
-      const hashedPassword = await bcrypt.hash(password, 10)
+      // Obtener los primeros 4 caracteres del rut
+      const rutSliced = rut.toString().slice(0, 4)
+      const hashedPassword = await bcrypt.hash(rutSliced, 10)
 
-      const user = await this.userRepository.save(
-        this.userRepository.create({
-          ...userData,
-          password: hashedPassword,
-        }),
-      )
+      // Crear un nuevo objeto usuario con los datos proporcionados
+      const user = this.userRepository.create({
+        ...createUserDto,
+        password: hashedPassword,
+      })
 
-      delete user.password
+      // Guardar el usuario en la base de datos
+      const savedUser = await this.userRepository.save(user)
+      delete savedUser.password
 
-      return user
+      return savedUser
     } catch (error) {
       this.handleDBErrors(error)
     }
   }
 
   /**
-   * Finds all users with pagination
-   * @param {PaginationDto} paginationDto - Parameters for pagination
-   * @returns {Promise<User[]>} - Array of users
+   * Método asincrónico que busca todos los usuarios según los parámetros de paginación.
+   * @param paginationDto Objeto que contiene los parámetros de paginación (opcional)
+   * @returns Una promesa que se resuelve con un arreglo de objetos de tipo User
    */
   async findAll(paginationDto: PaginationDto): Promise<User[]> {
     const { limit = 10, offset = 0 } = paginationDto
@@ -57,9 +62,9 @@ export class UsersService {
         'isActive',
         'role',
       ],
-      take: limit,
-      skip: offset,
-      //relations: { xxx: true },
+      take: limit, // Número máximo de registros a devolver
+      skip: offset, // Número de registros a saltar antes de devolver los resultados
+      //relations: { xxx: true }, // Incluir relaciones específicas
     })
     return users
   }
