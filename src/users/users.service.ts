@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { DataSource, Repository } from 'typeorm'
 import * as bcrypt from 'bcrypt'
 import { PaginationDto } from '../common/dtos/pagination.dto'
 import { CreateUserDto } from './dto/create-user.dto'
@@ -12,6 +12,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly dataSource: DataSource,
   ) {}
 
   /**
@@ -84,8 +85,26 @@ export class UsersService {
    * @param {UpdateUserDto} updateUserDto - Data for updating the user
    * @returns {string} - A string with the user id
    */
-  update(id: number, updateUserDto: UpdateUserDto): string {
-    return `This action updates a #${id} user`
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const queryRunner = this.dataSource.createQueryRunner()
+    await queryRunner.connect()
+    await queryRunner.startTransaction()
+
+    try {
+      const user = await queryRunner.manager.findOne(User, { where: { id } })
+      Object.assign(user, updateUserDto)
+      await queryRunner.manager.save(user)
+
+      await queryRunner.commitTransaction()
+    } catch (err) {
+      // Si hay un error, se deshace la transacción
+      await queryRunner.rollbackTransaction()
+    } finally {
+      // Se libera el objeto QueryRunner
+      await queryRunner.release()
+    }
+
+    return await this.userRepository.findOne({ where: { id } })
   }
 
   /**

@@ -30,12 +30,12 @@ export class UsersController {
   // Ruta para actualizar un usuario por su id
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto)
+    return this.usersService.update(id, updateUserDto)
   }
 
   // Ruta para eliminar un usuario por su id
-  @Delete(':id')
+  /* @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id)
-  }
+  } */
 }
