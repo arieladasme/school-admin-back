@@ -110,12 +110,17 @@ export class UsersService {
   }
 
   /**
-   * Removes a user by id
-   * @param {number} id - The id of the user to remove
+   * Elimino (desactivo) usuario
+   * @param {number} id - Id del usuario a desactivar
    * @returns {string} - A string with the user id
    */
-  remove(id: number): string {
-    return `This action removes a #${id} user`
+  async remove(id: string) {
+    return await this.userRepository
+      .createQueryBuilder()
+      .update(User)
+      .set({ isActive: false })
+      .where('id = :id', { id })
+      .execute()
   }
 
   /**
