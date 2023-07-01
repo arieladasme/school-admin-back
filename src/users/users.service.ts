@@ -104,7 +104,9 @@ export class UsersService {
       await queryRunner.release()
     }
 
-    return await this.userRepository.findOne({ where: { id } })
+    const updatedUser = await this.userRepository.findOne({ where: { id } })
+    delete updatedUser.password
+    return updatedUser
   }
 
   /**
