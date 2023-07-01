@@ -34,8 +34,8 @@ export class UsersController {
   }
 
   // Ruta para eliminar un usuario por su id
-  /* @Delete(':id')
+  @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id)
-  } */
+    return this.usersService.remove(id)
+  }
 }
