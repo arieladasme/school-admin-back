@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import { PaginationDto } from '../common/dtos/pagination.dto'
 import { CreateSubjectDto } from './dto/create-subject.dto'
 import { UpdateSubjectDto } from './dto/update-subject.dto'
 import { Subject } from './entities/subject.entity'
@@ -16,8 +17,14 @@ export class SubjectsService {
     return await this.subjectRepository.save({ name, code })
   }
 
-  findAll() {
-    return `This action returns all subjects`
+  async findAll(paginationDto: PaginationDto): Promise<Subject[]> {
+    const { limit = 10, offset = 0 } = paginationDto
+    return await this.subjectRepository.find({
+      select: ['code', 'name'],
+      take: limit, // Número máximo de registros a devolver
+      skip: offset, // Número de registros a saltar antes de devolver los resultados
+      //relations: { xxx: true }, // Incluir relaciones específicas
+    })
   }
 
   findOne(id: number) {
