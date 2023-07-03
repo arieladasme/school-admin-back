@@ -1,19 +1,22 @@
-import { User } from 'src/auth/entities/user.entity'
-import { Subject } from '../../subjects/entities/subject.entity'
-import { Entity, ManyToOne, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 
-@Entity('course')
+@Entity('courses')
 export class Course {
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryGeneratedColumn('uuid')
+  id: string
 
-  @ManyToOne(() => User)
-  teacher: User
+  //@ManyToOne(() => Subject)
+  @Column('text')
+  code: string
 
-  @ManyToOne(() => Subject)
-  subject: Subject
+  //@ManyToOne(() => User)
+  @Column('text')
+  teacher: string
 
-  @ManyToMany(() => User)
-  @JoinTable()
-  students: User[]
+  /* @OneToMany(() => User, (user) => user.course, {
+    cascade: true,
+    eager: true,
+  }) */
+  @Column('text', { array: true, default: [] })
+  students: string[]
 }
